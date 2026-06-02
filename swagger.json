@@ -1,0 +1,185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Participant & Session API",
+    "description": "Simple REST API for Managing Participants and Sessions",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Get All Sessions",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "Create a New Session",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Participant": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "example": "Frank"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Harrison"
+        },
+        "age": {
+          "type": "number",
+          "example": 30
+        },
+        "email": {
+          "type": "string",
+          "example": "harry@outlook.com"
+        },
+        "course": {
+          "type": "string",
+          "example": "Public Health Practical"
+        },
+        "level": {
+          "type": "string",
+          "example": "400"
+        },
+        "gender": {
+          "type": "string",
+          "example": "Male"
+        },
+        "cgpa": {
+          "type": "number",
+          "example": 4.5
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "SessionName": {
+          "type": "string",
+          "example": "Public Health Practical"
+        },
+        "courseCode": {
+          "type": "string",
+          "example": "PHI 421"
+        },
+        "Facilitator": {
+          "type": "string",
+          "example": "Professor Fredric Khan"
+        },
+        "units": {
+          "type": "number",
+          "example": 2
+        },
+        "department": {
+          "type": "string",
+          "example": "Public Health"
+        },
+        "semester": {
+          "type": "string",
+          "Category": "Health Practical"
+        },
+        "level": {
+          "type": "string",
+          "example": "400"
+        }
+      }
+    }
+  }
+}
