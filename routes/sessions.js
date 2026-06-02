@@ -7,7 +7,7 @@ const {
   createSession,
   updateSession,
   deleteSession,
-} = require("../controllers/sessions")
+} = require("../controllers/session");
 
 const validateSession = require("../middleware/sessionValidator");
 
