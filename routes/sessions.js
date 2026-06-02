@@ -11,6 +11,8 @@ const {
 
 const validateSession = require("../middleware/sessionValidator");
 
+const isAuthenticated = require("../middleware/authenticate");
+
 /**
  * @swagger
  * components:
@@ -110,7 +112,7 @@ router.get("/:id", getSessionById);
  *         description: Server Error
  */
 router.post("/", validateSession, createSession);
-
+router.post("/", isAuthenticated, validateSession, createSession);
 /**
  * @swagger
  * /sessions/{id}:
@@ -142,7 +144,7 @@ router.post("/", validateSession, createSession);
  *         description: Server Error
  */
 router.put("/:id", validateSession, updateSession);
-
+router.put("/:id", isAuthenticated, validateSession, updateSession);
 /**
  * @swagger
  * /sessions/{id}:
@@ -166,5 +168,6 @@ router.put("/:id", validateSession, updateSession);
  *         description: Server Error
  */
 router.delete("/:id", deleteSession);
+router.delete("/:id", isAuthenticated, deleteSession);
 
 module.exports = router;
