@@ -29,27 +29,26 @@ const validateParticipant = require("../middleware/participantValidator");
  *       properties:
  *         firstName:
  *           type: string
+ *           example: Frank
  *         lastName:
  *           type: string
+ *           example: Harrison
  *         age:
  *           type: number
+ *           example: 30
  *         email:
  *           type: string
+ *           example: frank@email.com
  *         session:
  *           type: string
- *           description: Session ID (MongoDB ObjectId reference)
+ *           description: MongoDB ObjectId referencing Session
+ *           example: 64f1a9c2b7a1e2d9c1234567
  *         level:
  *           type: string
+ *           example: Intermediate
  *         gender:
  *           type: string
- *       example:
- *         firstName: Frank
- *         lastName: Harrison
- *         age: 30
- *         email: harry@outlook.com
- *         session: 64f1a9c2b7a1e2d9c1234567
- *         level: Intermediate
- *         gender: Male
+ *           example: Male
  */
 
 /**
@@ -61,7 +60,7 @@ const validateParticipant = require("../middleware/participantValidator");
  *       - Participants
  *     responses:
  *       200:
- *         description: List of All Participants
+ *         description: Successfully retrieved participants
  *       500:
  *         description: Server Error
  */
@@ -71,21 +70,21 @@ router.get("/", getParticipants);
  * @swagger
  * /participants/{id}:
  *   get:
- *     summary: Get a Participant by ID
+ *     summary: Get Participant by ID
  *     tags:
  *       - Participants
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: MongoDB Participant ID
+ *         description: Participant MongoDB ID
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Participant Found
+ *         description: Participant found
  *       404:
- *         description: Participant not Found
+ *         description: Participant not found
  *       500:
  *         description: Server Error
  */
@@ -106,9 +105,9 @@ router.get("/:id", getParticipantById);
  *             $ref: '#/components/schemas/Participant'
  *     responses:
  *       201:
- *         description: Participant Created Successfully
+ *         description: Participant created successfully
  *       400:
- *         description: Validation Error
+ *         description: Validation error
  *       500:
  *         description: Server Error
  */
@@ -118,14 +117,14 @@ router.post("/", validateParticipant, createParticipant);
  * @swagger
  * /participants/{id}:
  *   put:
- *     summary: Update a Participant
+ *     summary: Update Participant
  *     tags:
  *       - Participants
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: MongoDB Participant ID
+ *         description: Participant MongoDB ID
  *         schema:
  *           type: string
  *     requestBody:
@@ -136,11 +135,11 @@ router.post("/", validateParticipant, createParticipant);
  *             $ref: '#/components/schemas/Participant'
  *     responses:
  *       200:
- *         description: Participant Updated Successfully
+ *         description: Participant updated successfully
  *       400:
- *         description: Validation Error
+ *         description: Validation error
  *       404:
- *         description: Participant Not Found
+ *         description: Participant not found
  *       500:
  *         description: Server Error
  */
@@ -150,21 +149,21 @@ router.put("/:id", validateParticipant, updateParticipant);
  * @swagger
  * /participants/{id}:
  *   delete:
- *     summary: Delete a Participant
+ *     summary: Delete Participant
  *     tags:
  *       - Participants
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: MongoDB Participant ID
+ *         description: Participant MongoDB ID
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Participant Deleted Successfully
+ *         description: Participant deleted successfully
  *       404:
- *         description: Participant Not Found
+ *         description: Participant not found
  *       500:
  *         description: Server Error
  */

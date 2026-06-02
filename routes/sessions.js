@@ -28,38 +28,39 @@ const validateSession = require("../middleware/sessionValidator");
  *       properties:
  *         sessionName:
  *           type: string
+ *           example: Public Health Implementation
  *         sessionCode:
  *           type: string
+ *           example: PHI 421
  *         facilitator:
  *           type: string
+ *           example: Professor Fredric Khan
  *         duration:
  *           type: number
+ *           example: 2
  *         category:
  *           type: string
+ *           example: Health Practical
  *         schedule:
  *           type: string
+ *           example: 10am-12noon
  *         level:
  *           type: string
- *       example:
- *         sessionName: Public Health Implementation
- *         sessionCode: PHI 421
- *         facilitator: Professor Fredric Khan
- *         duration: 2
- *         category:  Health Practical
- *         schedule:  10am-12noon
- *         level: Intermediate
+ *           example: Intermediate
  */
 
 /**
  * @swagger
  * /sessions:
  *   get:
- *     summary: Get all Sessions
+ *     summary: Get all sessions
  *     tags:
  *       - Sessions
  *     responses:
  *       200:
- *         description: List of Sessions
+ *         description: Successfully retrieved sessions
+ *       500:
+ *         description: Server Error
  */
 router.get("/", getSessions);
 
@@ -67,18 +68,23 @@ router.get("/", getSessions);
  * @swagger
  * /sessions/{id}:
  *   get:
- *     summary: Get Session by ID
+ *     summary: Get session by ID
  *     tags:
  *       - Sessions
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: Session MongoDB ID
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Session Found
+ *         description: Session found
+ *       404:
+ *         description: Session not found
+ *       500:
+ *         description: Server Error
  */
 router.get("/:id", getSessionById);
 
@@ -86,7 +92,7 @@ router.get("/:id", getSessionById);
  * @swagger
  * /sessions:
  *   post:
- *     summary: Create a Session
+ *     summary: Create a new session
  *     tags:
  *       - Sessions
  *     requestBody:
@@ -97,7 +103,11 @@ router.get("/:id", getSessionById);
  *             $ref: '#/components/schemas/Session'
  *     responses:
  *       201:
- *         description: Session Created
+ *         description: Session created successfully
+ *       400:
+ *         description: Validation error
+ *       500:
+ *         description: Server Error
  */
 router.post("/", validateSession, createSession);
 
@@ -105,13 +115,14 @@ router.post("/", validateSession, createSession);
  * @swagger
  * /sessions/{id}:
  *   put:
- *     summary: Update a Session
+ *     summary: Update session
  *     tags:
  *       - Sessions
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: Session MongoDB ID
  *         schema:
  *           type: string
  *     requestBody:
@@ -122,7 +133,13 @@ router.post("/", validateSession, createSession);
  *             $ref: '#/components/schemas/Session'
  *     responses:
  *       200:
- *         description: Session Updated
+ *         description: Session updated successfully
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Session not found
+ *       500:
+ *         description: Server Error
  */
 router.put("/:id", validateSession, updateSession);
 
@@ -130,18 +147,23 @@ router.put("/:id", validateSession, updateSession);
  * @swagger
  * /sessions/{id}:
  *   delete:
- *     summary: Delete a Session
+ *     summary: Delete session
  *     tags:
  *       - Sessions
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: Session MongoDB ID
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Session Deleted
+ *         description: Session deleted successfully
+ *       404:
+ *         description: Session not found
+ *       500:
+ *         description: Server Error
  */
 router.delete("/:id", deleteSession);
 
