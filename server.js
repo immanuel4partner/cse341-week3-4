@@ -1,13 +1,13 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const swaggerUi = require("swagger-ui-express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
 
 const swaggerSpec = require("./swagger");
 const connectDB = require("./config/db");
 
-const passport = require("passport");
 const session = require("express-session");
+const passport = require("passport");
 const GithubStrategy = require("passport-github2").Strategy;
 
 dotenv.config();
@@ -15,10 +15,14 @@ dotenv.config();
 const app = express();
 
 /* =========================
+   DATABASE
+========================= */
+connectDB();
+
+/* =========================
    MIDDLEWARE
 ========================= */
 app.use(cors());
-
 app.use(express.json());
 
 app.use(
@@ -33,7 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /* =========================
-   GITHUB OAUTH STRATEGY
+   GITHUB STRATEGY
 ========================= */
 passport.use(
   new GithubStrategy(
@@ -42,30 +46,26 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       callbackURL: process.env.GITHUB_CALLBACK_URL,
     },
-    function (accessToken, refreshToken, profile, done) {
+    (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
     }
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((obj, done) => {
-  done(null, obj);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 /* =========================
    AUTH ROUTES
 ========================= */
-app.get("/", (req, res) => {
-  if (req.session.user) {
-    return res.send(`Logged in as ${req.session.user.displayName}`);
-  }
-  res.send("Logged out");
-});
 
+// 🔐 LOGIN ROUTE (ADDED FIX)
+app.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+// 🔁 CALLBACK ROUTE
 app.get(
   "/auth/github/callback",
   passport.authenticate("github", {
@@ -77,10 +77,13 @@ app.get(
   }
 );
 
-/* =========================
-   DATABASE
-========================= */
-connectDB();
+// 🏠 HOME ROUTE
+app.get("/", (req, res) => {
+  if (req.session.user) {
+    return res.send(`Logged in as ${req.session.user.displayName}`);
+  }
+  res.send("Logged out");
+});
 
 /* =========================
    ROUTES
