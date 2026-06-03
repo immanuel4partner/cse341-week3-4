@@ -112,8 +112,8 @@ router.get("/:id", getParticipantById);
  *       500:
  *         description: Server Error
  */
-router.post("/", validateParticipant, createParticipant);
 router.post("/", isAuthenticated, validateParticipant, createParticipant);
+
 /**
  * @swagger
  * /participants/{id}:
@@ -144,8 +144,9 @@ router.post("/", isAuthenticated, validateParticipant, createParticipant);
  *       500:
  *         description: Server Error
  */
-router.put("/:id", validateParticipant, updateParticipant);
+
 router.put("/:id", isAuthenticated, validateParticipant, updateParticipant);
+
 /**
  * @swagger
  * /participants/{id}:
@@ -168,7 +169,7 @@ router.put("/:id", isAuthenticated, validateParticipant, updateParticipant);
  *       500:
  *         description: Server Error
  */
-router.delete("/:id", deleteParticipant);
+
 router.delete("/:id", isAuthenticated, deleteParticipant);
 
 module.exports = router;

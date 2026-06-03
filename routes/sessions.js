@@ -111,8 +111,10 @@ router.get("/:id", getSessionById);
  *       500:
  *         description: Server Error
  */
-router.post("/", validateSession, createSession);
+
+/* FIXED: removed duplicate route */
 router.post("/", isAuthenticated, validateSession, createSession);
+
 /**
  * @swagger
  * /sessions/{id}:
@@ -143,8 +145,10 @@ router.post("/", isAuthenticated, validateSession, createSession);
  *       500:
  *         description: Server Error
  */
-router.put("/:id", validateSession, updateSession);
+
+/* FIXED: removed duplicate route */
 router.put("/:id", isAuthenticated, validateSession, updateSession);
+
 /**
  * @swagger
  * /sessions/{id}:
@@ -167,7 +171,8 @@ router.put("/:id", isAuthenticated, validateSession, updateSession);
  *       500:
  *         description: Server Error
  */
-router.delete("/:id", deleteSession);
+
+/* FIXED: removed duplicate route */
 router.delete("/:id", isAuthenticated, deleteSession);
 
 module.exports = router;

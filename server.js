@@ -20,18 +20,21 @@ const app = express();
 connectDB();
 
 /* =========================
+   DEBUG (REMOVE IN PRODUCTION IF YOU WANT)
+========================= */
+console.log("CLIENT ID:", process.env.GITHUB_CLIENT_ID ? "OK" : "MISSING");
+console.log("CLIENT SECRET:", process.env.GITHUB_CLIENT_SECRET ? "OK" : "MISSING");
+console.log("CALLBACK:", process.env.GITHUB_CALLBACK_URL);
+
+/* =========================
    MIDDLEWARE
 ========================= */
 app.use(cors());
 app.use(express.json());
 
-console.log("CLIENT ID:", process.env.GITHUB_CLIENT_ID);
-console.log("CLIENT SECRET:", process.env.GITHUB_CLIENT_SECRET);
-console.log("CALLBACK:", process.env.GITHUB_CALLBACK_URL);
-
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, 
     resave: false,
     saveUninitialized: false,
   })
@@ -63,17 +66,18 @@ passport.deserializeUser((user, done) => done(null, user));
    AUTH ROUTES
 ========================= */
 
-// 🔐 LOGIN ROUTE
+// LOGIN ROUTE
 app.get(
   "/auth/github",
   passport.authenticate("github", { scope: ["user:email"] })
 );
 
-// 🔁 CALLBACK ROUTE
+// CALLBACK ROUTE 
 app.get(
   "/auth/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/api-docs",
+    session: true,
   }),
   (req, res) => {
     req.session.user = req.user;
@@ -81,10 +85,12 @@ app.get(
   }
 );
 
-// 🏠 HOME ROUTE
+/* =========================
+   HOME ROUTE
+========================= */
 app.get("/", (req, res) => {
   if (req.session.user) {
-    return res.send(`Logged in as ${req.session.user.displayName}`);
+    return res.send(`Logged in as ${req.session.user.username}`);
   }
   res.send("Logged out");
 });
