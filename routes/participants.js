@@ -11,6 +11,7 @@ const {
 } = require("../controllers/participants");
 
 const validateParticipant = require("../middleware/participantValidator");
+const isAuthenticated = require("../middleware/authenticate");
 
 /**
  * @swagger
