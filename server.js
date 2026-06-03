@@ -25,6 +25,10 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+console.log("CLIENT ID:", process.env.GITHUB_CLIENT_ID);
+console.log("CLIENT SECRET:", process.env.GITHUB_CLIENT_SECRET);
+console.log("CALLBACK:", process.env.GITHUB_CALLBACK_URL);
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -59,7 +63,7 @@ passport.deserializeUser((user, done) => done(null, user));
    AUTH ROUTES
 ========================= */
 
-// 🔐 LOGIN ROUTE (ADDED FIX)
+// 🔐 LOGIN ROUTE
 app.get(
   "/auth/github",
   passport.authenticate("github", { scope: ["user:email"] })
