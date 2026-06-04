@@ -68,14 +68,15 @@ passport.deserializeUser((user, done) => done(null, user));
    BASIC ROUTE
 ========================= */
 app.get("/", (req, res) => {
-  res.send("API is running");
+  if (req.session.user) {
+    return res.send(`Logged in as ${req.session.user.username}`);
+  }
+  res.send("API is running (not logged in)");
 });
 
 /* =========================
    ROUTES (FIXED HERE)
 ========================= */
-
-// FIX: you DO NOT have routes/auth.js, so use index.js instead
 app.use("/auth", require("./routes/index"));
 
 app.use("/participants", require("./routes/participants"));
