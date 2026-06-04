@@ -14,12 +14,12 @@ dotenv.config();
 const app = express();
 
 /* =========================
-   DATABASE CONNECTION
+   DB
 ========================= */
 connectDB();
 
 /* =========================
-   DEBUG 
+   DEBUG
 ========================= */
 console.log("CLIENT ID:", process.env.GITHUB_CLIENT_ID ? "OK" : "MISSING");
 console.log("CLIENT SECRET:", process.env.GITHUB_CLIENT_SECRET ? "OK" : "MISSING");
@@ -32,7 +32,7 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================
-   SESSION CONFIG
+   SESSION
 ========================= */
 app.use(
   session({
@@ -43,7 +43,7 @@ app.use(
 );
 
 /* =========================
-   PASSPORT SETUP
+   PASSPORT
 ========================= */
 app.use(passport.initialize());
 app.use(passport.session());
@@ -65,13 +65,19 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 /* =========================
-   ROUTES
+   BASIC ROUTE
+========================= */
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
+/* =========================
+   ROUTES (FIXED HERE)
 ========================= */
 
-// Auth routes (login/logout/callback)
-app.use("/", require("./routes/index"));
+// FIX: you DO NOT have routes/auth.js, so use index.js instead
+app.use("/auth", require("./routes/index"));
 
-// API routes
 app.use("/participants", require("./routes/participants"));
 app.use("/sessions", require("./routes/sessions"));
 

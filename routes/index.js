@@ -4,6 +4,7 @@ const passport = require("passport");
 
 /* =========================
    LOGIN
+   /auth/login
 ========================= */
 router.get(
   "/login",
@@ -11,10 +12,11 @@ router.get(
 );
 
 /* =========================
-   CALLBACK 
+   CALLBACK
+   /auth/github/callback
 ========================= */
 router.get(
-  "/auth/github/callback",
+  "/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/api-docs",
     session: true,
@@ -27,12 +29,11 @@ router.get(
 
 /* =========================
    LOGOUT
+   /auth/logout
 ========================= */
-router.get("/logout", function (req, res, next) {
+router.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) return next(err);
-
-    req.session.user = null;
 
     req.session.destroy((err) => {
       if (err) return next(err);
