@@ -4,11 +4,11 @@ const Participant = require("../models/participants");
 const getParticipants = async (req, res) => {
   try {
     const participants = await Participant.find();
-
     res.status(200).json(participants);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -27,7 +27,8 @@ const getParticipantById = async (req, res) => {
     res.status(200).json(participant);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -36,13 +37,21 @@ const getParticipantById = async (req, res) => {
 const createParticipant = async (req, res) => {
   try {
     const newParticipant = new Participant(req.body);
-
     const savedParticipant = await newParticipant.save();
 
     res.status(201).json(savedParticipant);
   } catch (error) {
+    // VALIDATION ERROR 
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        error: error.message,
+      });
+    }
+
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -53,8 +62,9 @@ const updateParticipant = async (req, res) => {
     const updatedParticipant = await Participant.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true,
-        runValidators: true
+      {
+        new: true,
+        runValidators: true,
       }
     );
 
@@ -66,8 +76,17 @@ const updateParticipant = async (req, res) => {
 
     res.status(200).json(updatedParticipant);
   } catch (error) {
+    // VALIDATION ERROR 
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        error: error.message,
+      });
+    }
+
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -88,7 +107,8 @@ const deleteParticipant = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };

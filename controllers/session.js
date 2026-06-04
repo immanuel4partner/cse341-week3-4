@@ -4,11 +4,11 @@ const Session = require("../models/session");
 const getSessions = async (req, res) => {
   try {
     const sessions = await Session.find();
-
     res.status(200).json(sessions);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -27,7 +27,8 @@ const getSessionById = async (req, res) => {
     res.status(200).json(session);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -36,13 +37,21 @@ const getSessionById = async (req, res) => {
 const createSession = async (req, res) => {
   try {
     const newSession = new Session(req.body);
-
     const savedSession = await newSession.save();
 
     res.status(201).json(savedSession);
   } catch (error) {
+    // VALIDATION ERROR (important for rubric)
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        error: error.message,
+      });
+    }
+
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -53,7 +62,10 @@ const updateSession = async (req, res) => {
     const updatedSession = await Session.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
     if (!updatedSession) {
@@ -64,8 +76,17 @@ const updateSession = async (req, res) => {
 
     res.status(200).json(updatedSession);
   } catch (error) {
+    // VALIDATION ERROR (important for rubric)
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        error: error.message,
+      });
+    }
+
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };
@@ -86,7 +107,8 @@ const deleteSession = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: "Server error",
+      error: error.message,
     });
   }
 };

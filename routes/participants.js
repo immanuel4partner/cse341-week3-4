@@ -65,7 +65,7 @@ const isAuthenticated = require("../middleware/authenticate");
  *       500:
  *         description: Server Error
  */
-router.get("/", getParticipants);
+router.get("/", isAuthenticated, getParticipants);
 
 /**
  * @swagger
@@ -89,7 +89,7 @@ router.get("/", getParticipants);
  *       500:
  *         description: Server Error
  */
-router.get("/:id", getParticipantById);
+router.get("/:id", isAuthenticated, getParticipantById);
 
 /**
  * @swagger
@@ -144,7 +144,6 @@ router.post("/", isAuthenticated, validateParticipant, createParticipant);
  *       500:
  *         description: Server Error
  */
-
 router.put("/:id", isAuthenticated, validateParticipant, updateParticipant);
 
 /**
@@ -169,7 +168,6 @@ router.put("/:id", isAuthenticated, validateParticipant, updateParticipant);
  *       500:
  *         description: Server Error
  */
-
 router.delete("/:id", isAuthenticated, deleteParticipant);
 
 module.exports = router;

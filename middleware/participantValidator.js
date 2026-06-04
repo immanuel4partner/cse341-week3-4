@@ -11,16 +11,17 @@ const validateParticipant = [
     .withMessage("Last name is required"),
 
   body("age")
-    .isNumeric()
-    .withMessage("Age must be a number"),
+    .isInt({ min: 1 })
+    .withMessage("Age must be a valid positive number"),
 
   body("email")
     .isEmail()
+    .normalizeEmail()
     .withMessage("Valid email is required"),
 
   body("session")
-    .notEmpty()
-    .withMessage("Session is required"),
+    .isMongoId()
+    .withMessage("Session must be a valid MongoDB ObjectId"),
 
   body("level")
     .notEmpty()

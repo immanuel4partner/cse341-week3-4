@@ -10,7 +10,6 @@ const {
 } = require("../controllers/session");
 
 const validateSession = require("../middleware/sessionValidator");
-
 const isAuthenticated = require("../middleware/authenticate");
 
 /**
@@ -64,7 +63,7 @@ const isAuthenticated = require("../middleware/authenticate");
  *       500:
  *         description: Server Error
  */
-router.get("/", getSessions);
+router.get("/", isAuthenticated, getSessions);
 
 /**
  * @swagger
@@ -88,7 +87,7 @@ router.get("/", getSessions);
  *       500:
  *         description: Server Error
  */
-router.get("/:id", getSessionById);
+router.get("/:id", isAuthenticated, getSessionById);
 
 /**
  * @swagger
@@ -111,8 +110,6 @@ router.get("/:id", getSessionById);
  *       500:
  *         description: Server Error
  */
-
-/* FIXED: removed duplicate route */
 router.post("/", isAuthenticated, validateSession, createSession);
 
 /**
@@ -145,8 +142,6 @@ router.post("/", isAuthenticated, validateSession, createSession);
  *       500:
  *         description: Server Error
  */
-
-/* FIXED: removed duplicate route */
 router.put("/:id", isAuthenticated, validateSession, updateSession);
 
 /**
@@ -171,8 +166,6 @@ router.put("/:id", isAuthenticated, validateSession, updateSession);
  *       500:
  *         description: Server Error
  */
-
-/* FIXED: removed duplicate route */
 router.delete("/:id", isAuthenticated, deleteSession);
 
 module.exports = router;

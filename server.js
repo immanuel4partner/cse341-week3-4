@@ -1,26 +1,25 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const session = require("express-session");
+const passport = require("passport");
+const GithubStrategy = require("passport-github2").Strategy;
 const swaggerUi = require("swagger-ui-express");
 
 const swaggerSpec = require("./swagger");
 const connectDB = require("./config/db");
-
-const session = require("express-session");
-const passport = require("passport");
-const GithubStrategy = require("passport-github2").Strategy;
 
 dotenv.config();
 
 const app = express();
 
 /* =========================
-   DATABASE
+   DATABASE CONNECTION
 ========================= */
 connectDB();
 
 /* =========================
-   DEBUG (REMOVE IN PRODUCTION IF YOU WANT)
+   DEBUG 
 ========================= */
 console.log("CLIENT ID:", process.env.GITHUB_CLIENT_ID ? "OK" : "MISSING");
 console.log("CLIENT SECRET:", process.env.GITHUB_CLIENT_SECRET ? "OK" : "MISSING");
@@ -32,20 +31,23 @@ console.log("CALLBACK:", process.env.GITHUB_CALLBACK_URL);
 app.use(cors());
 app.use(express.json());
 
+/* =========================
+   SESSION CONFIG
+========================= */
 app.use(
   session({
-    secret: process.env.SESSION_SECRET, 
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
 );
 
+/* =========================
+   PASSPORT SETUP
+========================= */
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* =========================
-   GITHUB STRATEGY
-========================= */
 passport.use(
   new GithubStrategy(
     {
@@ -63,46 +65,15 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 /* =========================
-   AUTH ROUTES
-========================= */
-
-// LOGIN ROUTE
-app.get(
-  "/auth/github",
-  passport.authenticate("github", { scope: ["user:email"] })
-);
-
-// CALLBACK ROUTE 
-app.get(
-  "/auth/github/callback",
-  passport.authenticate("github", {
-    failureRedirect: "/api-docs",
-    session: true,
-  }),
-  (req, res) => {
-    req.session.user = req.user;
-    res.redirect("/");
-  }
-);
-
-/* =========================
-   HOME ROUTE
-========================= */
-app.get("/", (req, res) => {
-  if (req.session.user) {
-    return res.send(`Logged in as ${req.session.user.username}`);
-  }
-  res.send("Logged out");
-});
-
-/* =========================
    ROUTES
 ========================= */
-const participantRoutes = require("./routes/participants");
-const sessionRoutes = require("./routes/sessions");
 
-app.use("/participants", participantRoutes);
-app.use("/sessions", sessionRoutes);
+// Auth routes (login/logout/callback)
+app.use("/", require("./routes/index"));
+
+// API routes
+app.use("/participants", require("./routes/participants"));
+app.use("/sessions", require("./routes/sessions"));
 
 /* =========================
    SWAGGER
