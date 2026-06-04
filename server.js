@@ -69,7 +69,7 @@ passport.deserializeUser((user, done) => done(null, user));
 ========================= */
 
 // Auth routes (login/logout/callback)
-app.use("/", require("./routes/login/index"));
+app.use("/", require("./routes/index"));
 
 // API routes
 app.use("/participants", require("./routes/participants"));
