@@ -14,16 +14,9 @@ dotenv.config();
 const app = express();
 
 /* =========================
-   DB
+   DATABASE
 ========================= */
 connectDB();
-
-/* =========================
-   DEBUG
-========================= */
-console.log("CLIENT ID:", process.env.GITHUB_CLIENT_ID ? "OK" : "MISSING");
-console.log("CLIENT SECRET:", process.env.GITHUB_CLIENT_SECRET ? "OK" : "MISSING");
-console.log("CALLBACK:", process.env.GITHUB_CALLBACK_URL);
 
 /* =========================
    MIDDLEWARE
@@ -37,7 +30,7 @@ app.use(cors({
 app.use(express.json());
 
 /* =========================
-   SESSION (IMPORTANT FIX)
+   SESSION
 ========================= */
 app.use(
   session({
@@ -46,13 +39,13 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false // set true only if HTTPS strict setup
+      secure: false
     }
   })
 );
 
 /* =========================
-   PASSPORT
+   PASSPORT SETUP
 ========================= */
 app.use(passport.initialize());
 app.use(passport.session());
@@ -74,7 +67,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 /* =========================
-   HOME ROUTE (SESSION CHECK FIXED)
+   HOME ROUTE
 ========================= */
 app.get("/", (req, res) => {
   if (req.session.user) {

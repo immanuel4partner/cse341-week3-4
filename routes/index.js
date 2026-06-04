@@ -20,20 +20,15 @@ router.get(
     session: true,
   }),
   (req, res) => {
-    // store user in session
     req.session.user = req.user;
     res.redirect("/");
   }
 );
 
 /* =========================
-   LOGOUT (FIXED PROPERLY)
+   LOGOUT
 ========================= */
 router.get("/logout", (req, res, next) => {
-  if (!req.session.user) {
-    return res.status(200).send("Already logged out");
-  }
-
   req.logout(function (err) {
     if (err) return next(err);
 
@@ -41,7 +36,6 @@ router.get("/logout", (req, res, next) => {
       if (err) return next(err);
 
       res.clearCookie("connect.sid");
-
       return res.status(200).send("Successfully logged out");
     });
   });
