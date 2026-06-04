@@ -4,7 +4,6 @@ const passport = require("passport");
 
 /* =========================
    LOGIN
-   /auth/login
 ========================= */
 router.get(
   "/login",
@@ -13,7 +12,6 @@ router.get(
 
 /* =========================
    CALLBACK
-   /auth/github/callback
 ========================= */
 router.get(
   "/github/callback",
@@ -22,16 +20,20 @@ router.get(
     session: true,
   }),
   (req, res) => {
+    // store user in session
     req.session.user = req.user;
     res.redirect("/");
   }
 );
 
 /* =========================
-   LOGOUT
-   /auth/logout
+   LOGOUT (FIXED PROPERLY)
 ========================= */
 router.get("/logout", (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(200).send("Already logged out");
+  }
+
   req.logout(function (err) {
     if (err) return next(err);
 
@@ -39,7 +41,8 @@ router.get("/logout", (req, res, next) => {
       if (err) return next(err);
 
       res.clearCookie("connect.sid");
-      res.redirect("/");
+
+      return res.status(200).send("Successfully logged out");
     });
   });
 });

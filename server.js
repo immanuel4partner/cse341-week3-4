@@ -28,17 +28,26 @@ console.log("CALLBACK:", process.env.GITHUB_CALLBACK_URL);
 /* =========================
    MIDDLEWARE
 ========================= */
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
 app.use(express.json());
 
 /* =========================
-   SESSION
+   SESSION (IMPORTANT FIX)
 ========================= */
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false // set true only if HTTPS strict setup
+    }
   })
 );
 
@@ -65,7 +74,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 /* =========================
-   BASIC ROUTE
+   HOME ROUTE (SESSION CHECK FIXED)
 ========================= */
 app.get("/", (req, res) => {
   if (req.session.user) {
@@ -75,10 +84,9 @@ app.get("/", (req, res) => {
 });
 
 /* =========================
-   ROUTES (FIXED HERE)
+   ROUTES
 ========================= */
 app.use("/auth", require("./routes/index"));
-
 app.use("/participants", require("./routes/participants"));
 app.use("/sessions", require("./routes/sessions"));
 
